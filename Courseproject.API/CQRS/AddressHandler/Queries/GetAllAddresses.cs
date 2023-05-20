@@ -4,7 +4,7 @@ using Courseproject.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Courseproject.API.CQRS.Queries;
+namespace Courseproject.API.CQRS.AddressHandler.Queries;
 
 public class GetAllAddresses : IRequest<AddressesDto>
 {

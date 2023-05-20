@@ -4,7 +4,7 @@ using Courseproject.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Courseproject.API.CQRS.Command;
+namespace Courseproject.API.CQRS.AddressHandler.Command;
 
 public class UpdateAddress : IRequest<SuccessDto>
 {
@@ -40,7 +40,7 @@ public class UpdateAddressHandler : IRequestHandler<UpdateAddress, SuccessDto>
         address.Phone = request.Phone;
         address.Street = request.Street;
         address.Zip = request.Zip;
-       await  _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
         dto.address = address;
         return dto;
     }

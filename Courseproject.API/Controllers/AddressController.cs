@@ -1,5 +1,5 @@
-﻿using Courseproject.API.CQRS.Command;
-using Courseproject.API.CQRS.Queries;
+﻿using Courseproject.API.CQRS.AddressHandler.Command;
+using Courseproject.API.CQRS.AddressHandler.Queries;
 using Courseproject.API.ResponseDtos;
 using Courseproject.Common.Dtos;
 using Courseproject.Common.Interfaces;
@@ -12,7 +12,7 @@ using System.Net;
 namespace Courseproject.API.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/Mediator/[controller]")]
 public class AddressController : ControllerBase
 {
     private IAddressService AddressService { get; }
@@ -43,29 +43,26 @@ public class AddressController : ControllerBase
     }
 
     [HttpDelete("Delete")]
-    public async Task<IActionResult> DeleteAddress(AddressDelete addressDelete)
+    public async Task<IActionResult> DeleteAddress([FromBody] DeleteAddress command)
     {
-        await AddressService.DeleteAddressAsync(addressDelete);
-        return Ok();
+        var ad = await _sender.Send(command);
+        if (!ad.status)
+        {
+            return NotFound(ad);
+        }
+        return Ok(ad);
     }
 
     [HttpGet("Get/{id}")]
-    public async Task<IActionResult> GetAddress(int id)
+    public async Task<IActionResult> GetAddress([FromQuery]int id)
     {
-        var address = await AddressService.GetAddressAsync(id);
-        var addressDto = new SuccessDto();
-
-        if (address is not null)
+        var address = await _sender.Send(new GetAddressById { Id= id });
+        if (!address.status)
         {
-            addressDto.address = address;
-            addressDto.message = "These Are Your Addresses ";
-            addressDto.status = true;
-            return Ok(addressDto);
+            return NotFound(address);
         }
-        addressDto.address = address;
-        addressDto.message = "No Address Found";
-        addressDto.status = true;
-        return NotFound(addressDto);
+
+        return Ok(address);
     }
 
     [HttpGet("GetAll")]
