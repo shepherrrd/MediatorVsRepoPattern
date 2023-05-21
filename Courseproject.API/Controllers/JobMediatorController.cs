@@ -1,4 +1,6 @@
-﻿using Courseproject.API.CQRS.JobHandler.Command;
+﻿using Courseproject.API.CQRS.AddressHandler.Command;
+using Courseproject.API.CQRS.AddressHandler.Queries;
+using Courseproject.API.CQRS.JobHandler.Command;
 using Courseproject.API.CQRS.JobHandler.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -37,5 +39,42 @@ namespace Courseproject.API.Controllers
 
             return Ok(jobs);
         }
+
+        [HttpPut("Update/{id}")]
+        public async Task<IActionResult> UpdateJob([FromRoute] int id, [FromBody] UpdateJob address)
+        {
+            address.id = id;
+            var ent = await _sender.Send(address);
+            if (!ent.status)
+            {
+                return BadRequest(ent);
+            }
+            return Ok(ent);
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteAddress([FromBody] DeletJob command)
+        {
+            var ad = await _sender.Send(command);
+            if (!ad.status)
+            {
+                return NotFound(ad);
+            }
+            return Ok(ad);
+        }
+
+        [HttpGet("Get/{id}")]
+        public async Task<IActionResult> GetAddress([FromQuery] GetJobById command)
+        {
+            var address = await _sender.Send(command);
+            if (!address.status)
+            {
+                return NotFound(address);
+            }
+
+            return Ok(address);
+        }
+
+       
     }
 }
