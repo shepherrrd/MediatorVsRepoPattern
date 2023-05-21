@@ -30,9 +30,9 @@ public class GetAddressByIdHandler : IRequestHandler<GetAddressById, SuccessDto>
         }
         return new SuccessDto
         {
-            status = false,
+            status = true,
             message = $"Operation Completed Successfully",
-            address = address
+            data = address
         };
     }
 }

@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 DIconfiguration.RegisterServices(builder.Services);
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IGenericRepository<Address>, GenericRepository<Address>>();
+builder.Services.AddScoped<IGenericRepository<Job>, GenericRepository<Job>>();
 builder.Services.AddControllers();
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(Program).Assembly));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
