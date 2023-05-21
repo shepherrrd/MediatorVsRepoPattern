@@ -71,10 +71,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await query.ToListAsync();
     }
 
-    public async Task<T> InsertAsync(T entity)
+    public async Task<int> InsertAsync(T entity)
     {
         await DbSet.AddAsync(entity);
-        return entity;
+        return entity.Id;
     }
 
     public async Task SaveChangesAsync()

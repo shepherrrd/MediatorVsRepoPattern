@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Courseproject.Infrastructure;
 
-public class ApplicationDbContext : IdentityDbContext<IdentityUser,IdentityRole,string>
+public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Employee> Employees { get; set; }
@@ -14,14 +14,12 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser,IdentityRole,
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        
+
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string connectionString = "server=localhost;user id=root;password=;database=csharp;";
-
-        optionsBuilder.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString));
+        optionsBuilder.UseSqlite("Filename=Courseproject.db");
         base.OnConfiguring(optionsBuilder);
     }
 
@@ -36,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser,IdentityRole,
         builder.Entity<Employee>().HasOne(e => e.Job);
 
         builder.Entity<Team>().HasMany(e => e.Employees).WithMany(e => e.Teams);
+
         base.OnModelCreating(builder);
     }
 }
