@@ -32,7 +32,7 @@ public class UpdateAddressHandler : IRequestHandler<UpdateAddress, SuccessDto>
         if (address is null)
         {
             dto.status = false;
-            dto.address = null;
+            dto.data = null;
             dto.message = $"Address of Id {request.id} Was Not Found ";
             return dto;
         }
@@ -41,7 +41,7 @@ public class UpdateAddressHandler : IRequestHandler<UpdateAddress, SuccessDto>
         address.Street = request.Street;
         address.Zip = request.Zip;
         await _context.SaveChangesAsync();
-        dto.address = address;
+        dto.data = address;
         return dto;
     }
 }

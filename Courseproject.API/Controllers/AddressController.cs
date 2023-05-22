@@ -24,7 +24,7 @@ public class AddressController : ControllerBase
     }
 
     [HttpPost("Create")]
-     public async Task<IActionResult> CreateAddress([FromBody]UpdateAddress address)
+     public async Task<IActionResult> CreateAddress([FromBody]CreateNewAddress address)
     {
         var addres = await _sender.Send(address);
         return Ok(addres);
@@ -54,9 +54,9 @@ public class AddressController : ControllerBase
     }
 
     [HttpGet("Get/{id}")]
-    public async Task<IActionResult> GetAddress([FromQuery]int id)
+    public async Task<IActionResult> GetAddress([FromQuery]GetAddressById command)
     {
-        var address = await _sender.Send(new GetAddressById { Id= id });
+        var address = await _sender.Send(command);
         if (!address.status)
         {
             return NotFound(address);

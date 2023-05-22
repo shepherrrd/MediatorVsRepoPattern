@@ -3,24 +3,27 @@ using Courseproject.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Courseproject.API.CQRS.AddressHandler.Queries;
+namespace Courseproject.API.CQRS.JobHandler.Command;
 
-public class GetAddressById : IRequest<SuccessDto>
+public class DeletJob : IRequest<SuccessDto>
 {
     public int Id { get; set; }
+
 }
 
-public class GetAddressByIdHandler : IRequestHandler<GetAddressById, SuccessDto>
+public class DeleteJobHandler : IRequestHandler<DeletJob, SuccessDto>
 {
     private readonly ApplicationDbContext _context;
-    public GetAddressByIdHandler(ApplicationDbContext context)
+
+    public DeleteJobHandler(ApplicationDbContext context)
     {
         _context = context;
     }
-    public async Task<SuccessDto> Handle(GetAddressById request, CancellationToken cancellationToken)
+    public async Task<SuccessDto> Handle(DeletJob request, CancellationToken cancellationToken)
     {
-        var address = await _context.Addresses.FirstOrDefaultAsync(c => c.Id == request.Id);
-        if(null == address)
+
+        var job = await _context.Jobs.FirstOrDefaultAsync(c => c.Id == request.Id);
+        if (null == job)
         {
             return new SuccessDto
             {
@@ -28,11 +31,13 @@ public class GetAddressByIdHandler : IRequestHandler<GetAddressById, SuccessDto>
                 message = $"Address Of Id {request.Id} not found"
             };
         }
+
+        _context.Jobs.Remove(job);
+        await _context.SaveChangesAsync();
         return new SuccessDto
         {
             status = true,
             message = $"Operation Completed Successfully",
-            data = address
         };
     }
 }

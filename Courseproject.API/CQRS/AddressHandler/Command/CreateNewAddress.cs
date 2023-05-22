@@ -7,7 +7,11 @@ namespace Courseproject.API.CQRS.AddressHandler.Command;
 
 public class CreateNewAddress : IRequest<SuccessDto>
 {
-    public Address address { get; set; }
+#nullable disable
+    public string City { get; set; }
+    public string Zip { get; set; }
+    public string Street { get; set; }
+    public string Phone { get; set; }
 }
 
 public class CreateNewAddressHandler : IRequestHandler<CreateNewAddress, SuccessDto>
@@ -21,16 +25,16 @@ public class CreateNewAddressHandler : IRequestHandler<CreateNewAddress, Success
     {
         var address = new Address
         {
-            City = request.address.City,
-            Street = request.address.Street,
-            Zip = request.address.Zip,
-            Phone = request.address.Phone,
+            City = request.City,
+            Street = request.Street,
+            Zip = request.Zip,
+            Phone = request.Phone,
 
         };
         await _context.Addresses.AddAsync(address);
         await _context.SaveChangesAsync(cancellationToken);
         var dto = new SuccessDto();
-        dto.address = request.address;
+        dto.data = address;
 
         return dto;
 

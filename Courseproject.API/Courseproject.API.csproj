@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Courseproject.Infrastructure\Courseproject.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\TeamHandler\" />
+  </ItemGroup>
+
 </Project>
