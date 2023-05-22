@@ -32,7 +32,7 @@ public class DtoEntityMapperProfile : Profile
         CreateMap<Employee, EmployeeDetails>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             //.ForMember(dest => dest.Teams, opt => opt.Ignore()) //todo: add teams
-            .ForMember(dest => dest.Job, opt => opt.Ignore())
+            .ForMember(dest => dest.JobGet, opt => opt.Ignore())
             .ForMember(dest => dest.Address, opt => opt.Ignore());
 
 		CreateMap<Employee, EmployeeList>();
