@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Writers;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-DIconfiguration.RegisterServices(builder.Services);
+DIConfiguration.RegisterServices(builder.Services);
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IGenericRepository<Address>, GenericRepository<Address>>();
 builder.Services.AddScoped<IGenericRepository<Job>, GenericRepository<Job>>();

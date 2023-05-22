@@ -4,11 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Courseproject.Business;
 
-public class DIconfiguration
+public class DIConfiguration
 {
-    public static void RegisterServices(IServiceCollection service)
+    public static void RegisterServices(IServiceCollection services)
     {
-        service.AddAutoMapper(typeof(DtoEntityMapperProfile));
-        service.AddScoped<IAddressService, AddressService>();
+        services.AddAutoMapper(typeof(DtoEntityMapperProfile));
+        services.AddScoped<IAddressService, AddressService>();
+        services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
     }
 }
