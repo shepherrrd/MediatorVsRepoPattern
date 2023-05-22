@@ -56,6 +56,7 @@ namespace Courseproject.API.CQRS.EmployeeHandler.Command
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync(cancellationToken);
 
+            dto.data = employee;
             
             return dto;
 

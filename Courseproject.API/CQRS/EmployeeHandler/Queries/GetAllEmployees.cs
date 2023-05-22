@@ -3,6 +3,7 @@ using Courseproject.Common.Model;
 using Courseproject.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace Courseproject.API.CQRS.EmployeeHandler.Queries;
@@ -28,17 +29,42 @@ public class GetAllEmployeesHandler : IRequestHandler<GetAllEmployees, SuccessDt
     }
     public async Task<SuccessDto> Handle(GetAllEmployees request, CancellationToken cancellationToken)
     {
-        var employee = await (from e in _context.Employees
-                              join a in _context.Addresses on e.Address.Id equals a.Id
-                              join j in _context.Jobs on e.Job.Id equals j.Id
-                              select new Employee
-                              {
-                                  Address = a,
-                                  Id = e.Id,
-                                  Job = j,
-                                  FirstName = e.FirstName,
-                                  LastName = e.LastName,
-                              }).ToListAsync();
+        //var employee = await (from e in _context.Employees
+        //                      join a in _context.Addresses on e.Address.Id equals a.Id
+        //                      join j in _context.Jobs on e.Job.Id equals j.Id
+        //                      select new Employee
+        //                      {
+        //                          Address = a,
+        //                          Id = e.Id,
+        //                          Job = j,
+        //                          FirstName = e.FirstName,
+        //                          LastName = e.LastName,
+        //                      }).Include(t => t.Teams).ToListAsync();
+        var employee = await _context.Employees
+    .Include(e => e.Address)
+    .Include(e => e.Job)
+    .Include(e => e.Teams)
+    .Select(e => new Employee
+    {
+        Address = new Address
+        {
+            Id = e.Address.Id,
+            Zip = e.Address.Zip,
+            Street = e.Address.Street,
+            Phone = e.Address.Phone,
+            City = e.Address.City,
+        },
+        Id = e.Id,
+        Job = new Job { 
+            Id = e.Job.Id,
+            Name =e.Job.Name,
+            Description = e.Job.Description
+        },
+        FirstName = e.FirstName,
+        LastName = e.LastName,
+        Teams = e.Teams.Select(t => new Team { Name =  t.Name  , Id =  t.Id }).ToList()
+    })
+    .ToListAsync();
         var dto = new SuccessDto();
 
         if(!employee.Any())
@@ -67,9 +93,9 @@ public class GetAllEmployeesHandler : IRequestHandler<GetAllEmployees, SuccessDt
             employee = employee.Take(request.Take).ToList(); 
         }
 
-        employee = employee.Select(employee => new Employee { Id = employee.Id, FirstName = employee.FirstName, Job = employee.Job,Address= employee.Address,
-            LastName = employee.LastName, 
-             }).ToList();
+
+        
+        
         var data = new[]
         {
             new

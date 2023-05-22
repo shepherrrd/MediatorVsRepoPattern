@@ -1,8 +1,10 @@
+using Courseproject.API;
 using Courseproject.Business;
 using Courseproject.Common.Interfaces;
 using Courseproject.Common.Model;
 using Courseproject.Infrastructure;
 using Microsoft.OpenApi.Writers;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,7 @@ builder.Services.AddScoped<IGenericRepository<Address>, GenericRepository<Addres
 builder.Services.AddScoped<IGenericRepository<Job>, GenericRepository<Job>>();
 builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
 builder.Services.AddScoped<IGenericRepository<Team>, GenericRepository<Team>>();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(Program).Assembly));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,6 +35,7 @@ using(var scope = app.Services.CreateScope())
     dbContext.Database.EnsureCreated();
 
 }
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
