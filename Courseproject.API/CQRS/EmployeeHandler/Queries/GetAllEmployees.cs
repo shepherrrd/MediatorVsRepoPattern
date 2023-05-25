@@ -68,7 +68,7 @@ public class GetAllEmployeesHandler : IRequestHandler<GetAllEmployees, SuccessDt
         var dto = new SuccessDto();
 
         if(!employee.Any())
-        {
+        { 
             dto.status = false;
             dto.message = " No Employees Found";
             return dto; 
@@ -104,7 +104,11 @@ public class GetAllEmployeesHandler : IRequestHandler<GetAllEmployees, SuccessDt
                 NextPage = "?page=2"
             }
         };
-        dto.data = data;
+        dto.data = new
+        {
+           data = data,
+         
+        };
         return dto;
 
     }

@@ -5,6 +5,7 @@ using Courseproject.Common.Dtos;
 using Courseproject.Common.Interfaces;
 using Courseproject.Common.Model;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -64,13 +65,16 @@ public class AddressController : ControllerBase
 
         return Ok(address);
     }
-
     [HttpGet("GetAll")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<IActionResult> GetAddresses()
     {
+        var id = User?.Identity.Name;
+        //var id = User?.Claims.FirstOrDefault()?.Value;
 
         var addresses = await  _sender.Send(new GetAllAddresses { });
-        if (addresses.address == null)
+        if (addresses.data == null)
         {
             return NotFound(addresses);
         }

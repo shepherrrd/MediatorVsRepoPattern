@@ -27,7 +27,7 @@ namespace Courseproject.API.CQRS.EmployeeHandler.Command
         }
         public async Task<SuccessDto> Handle(CreateEmployee request, CancellationToken cancellationToken)
         {
-            var dto = new SuccessDto();
+            var dto = new SuccessDto(); 
             var address = await _context.Addresses.FirstOrDefaultAsync(c => c.Id == request.AddressId);
             var job = await _context.Jobs.FirstOrDefaultAsync(c => c.Id == request.JobId);
             if (address == null)
@@ -36,6 +36,7 @@ namespace Courseproject.API.CQRS.EmployeeHandler.Command
                 dto.message = $"Address of Id {request.AddressId} Not Found ";
                 return dto;
             }
+            
 
             if (job == null)
             {
@@ -43,8 +44,6 @@ namespace Courseproject.API.CQRS.EmployeeHandler.Command
                 dto.message = $"Job of Id {request.JobId} Not Found ";
                 return dto;
             }
-
-
             var employee = new Employee
             {
                 FirstName = request.FirstName,

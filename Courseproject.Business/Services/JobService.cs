@@ -16,7 +16,7 @@ public class JobService : IJobService
         JobRepository = jobRepository;
     }
 
-
+    
     public async Task<int> CreateJobAsync(JobCreate jobCreate)
     {
         var entity = Mapper.Map<Job>(jobCreate);

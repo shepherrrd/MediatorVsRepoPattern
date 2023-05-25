@@ -2,15 +2,16 @@
 using Courseproject.Common.Model;
 using Courseproject.Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Courseproject.API.CQRS.AddressHandler.Queries;
 
-public class GetAllAddresses : IRequest<AddressesDto>
+public class GetAllAddresses : IRequest<SuccessDto>
 {
 }
 
-public class GetAllAddressesHandler : IRequestHandler<GetAllAddresses, AddressesDto>
+public class GetAllAddressesHandler : IRequestHandler<GetAllAddresses, SuccessDto>
 {
     private readonly ApplicationDbContext _context;
     public GetAllAddressesHandler(ApplicationDbContext context)
@@ -18,22 +19,28 @@ public class GetAllAddressesHandler : IRequestHandler<GetAllAddresses, Addresses
         _context = context;
 
     }
-    public async Task<AddressesDto> Handle(GetAllAddresses request, CancellationToken cancellationToken)
+    public async Task<SuccessDto> Handle(GetAllAddresses request, CancellationToken cancellationToken)
     {
         var address = await _context.Addresses.ToListAsync();
-        var dto = new AddressesDto();
+        var dto = new SuccessDto();
+        //var em = new HttpContextAccessor().HttpContext?.User.Identity?.Name ?? "";
+
         if (address is not null)
         {
 
             dto.status = true;
             dto.message = " Here are your Addresses ";
-            dto.address = address;
+            dto.data = new
+            {
+                addresses = address,
+               
+            };
             return dto;
         }
 
         dto.status = false;
         dto.message = " Here are your Addresses ";
-        dto.address = address;
+        dto.data = address;
         return dto;
 
     }
